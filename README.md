@@ -22,3 +22,10 @@ http://localhost:8080/earthquake/swagger-ui.html
 # H2 Console
 
 http://localhost:8080/earthquake/console
+
+
+
+@author
+Alejandro Sandoval
+asandovalster@gmail.com
++569 63038688
