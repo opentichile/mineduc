@@ -1,10 +1,12 @@
 package cl.mineduc.sismologia.validator;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
 
 /**
  * 
@@ -23,17 +25,17 @@ public class CheckDateValidator implements ConstraintValidator<CheckDateFormat, 
     }
 
     @Override
-    public boolean isValid(String object, ConstraintValidatorContext constraintContext) {
+    public boolean isValid(String object, ConstraintValidatorContext constraintContext){
         if ( object == null ) {
             return true;
         }
 
         try {
             Date date = new SimpleDateFormat(pattern).parse(object);
+            System.out.println(date);
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        } catch (ParseException e) {
+           return true;
         }
     }
 }

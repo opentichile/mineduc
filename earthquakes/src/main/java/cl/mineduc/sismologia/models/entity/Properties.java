@@ -1,15 +1,9 @@
 package cl.mineduc.sismologia.models.entity;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 
 /**
  * 

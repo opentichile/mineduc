@@ -4,11 +4,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 //import org.springframework.http.HttpMethod;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 //import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -46,24 +48,29 @@ public class SismoProjectApplication {
 	 * Administrador H2
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	@Bean
 	ServletRegistrationBean h2servletRegistration(){
-	        ServletRegistrationBean registrationBean = new ServletRegistrationBean( new WebServlet());
+	        @SuppressWarnings("unchecked")
+			ServletRegistrationBean registrationBean = new ServletRegistrationBean( new WebServlet());
 	        registrationBean.addUrlMappings("/console/*");
 	        return registrationBean;
 	}
 	 
-//
-//	@EnableWebSecurity
-//	@Configuration
-//	class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-//
-//		@Override
-//		protected void configure(HttpSecurity http) throws Exception {
-//			http.csrf().disable()
-//					.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-//					.authorizeRequests().antMatchers(HttpMethod.POST, "/user").permitAll().anyRequest().authenticated();
-//		}
-//	}
-
+	@Bean
+	public MessageSource messageSource() {
+	    ReloadableResourceBundleMessageSource messageSource
+	      = new ReloadableResourceBundleMessageSource();
+	    
+	    messageSource.setBasename("classpath:messages");
+	    messageSource.setDefaultEncoding("UTF-8");
+	    return messageSource;
+	}
+	
+	@Bean
+	public LocalValidatorFactoryBean getValidator() {
+	    LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+	    bean.setValidationMessageSource(messageSource());
+	    return bean;
+	}
 }

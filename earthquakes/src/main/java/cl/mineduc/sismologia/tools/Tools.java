@@ -1,5 +1,10 @@
 package cl.mineduc.sismologia.tools;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import cl.mineduc.sismologia.models.entity.Periodo;
+import cl.mineduc.sismologia.models.entity.Rango;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -48,6 +53,46 @@ public class Tools {
 	}
 	
 	
-	
+	public boolean isValid(Periodo periodo)
+	{
+		boolean validation = true;
+	 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date d_starttime = sdf.parse(periodo.starttime);
+			Date d_endtime = sdf.parse(periodo.endtime);
+			
+			if(d_starttime.after(d_endtime)) {
+				
+				validation = false;
+				
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			validation = false;
+		}	
+	 	
+		return validation;
+	}
 
+	
+	public boolean isValid(Rango rango)
+	{
+		boolean validation = true;
+	 	
+		try {
+			
+			if(Double.parseDouble(rango.maxmagnitude) < Double.parseDouble(rango.minmagnitude)) {
+				
+				validation = false;
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			validation = false;
+		}	
+	 	
+		return validation;
+	}
+	
 }

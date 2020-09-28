@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,6 +60,12 @@ public class ServiceController  {
 	@Autowired
 	private IMetadataService metadataService;
 	
+	@Value("${periodo.date.rango}")
+	private String message_periodo;
+	
+	@Value("${rango.magnitude.rango}")
+	private String message_range;
+	
     @Value("${url.heartquake.endpoint}")
     private String url;
 	
@@ -70,9 +76,14 @@ public class ServiceController  {
 		String ret = "";
 
 		logger.info("### earthquakes Init");
-
+		if(!Tools.getInstance().isValid(periodo))
+		{
+			result.addError(new ObjectError("Periodo de fecha", message_periodo));
+		}
 		if (result.hasErrors()) {
 
+			logger.info("### earthquakes - Errores Encontrados");
+			
 			List<String> errors = result.getFieldErrors().stream()
 					.map(err -> "El campo '" + err.getField() + "' " + err.getDefaultMessage())
 					.collect(Collectors.toList());
@@ -95,7 +106,11 @@ public class ServiceController  {
 			response.put("mensaje", "Error al realizar el insert en la base de datos");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		} catch (Exception ex) {
+			response.put("mensaje", "Error al parsear parámetros de Fecha");
+			response.put("error", ex.getMessage().concat(": ").concat(ex.getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNPROCESSABLE_ENTITY);
+    	}  
 
 		response.put("mensaje", "La Bitácora  ha sido creado con éxito!");
 		response.put("bitacora", ret);
@@ -111,9 +126,15 @@ public class ServiceController  {
 		String ret = "";
 
 		logger.info("### earthquakes Init");
-
+		if(!Tools.getInstance().isValid(rango))
+		{
+			result.addError(new ObjectError("Rangos de Magnitud", message_range));
+		}
+		
 		if (result.hasErrors()) {
 
+			logger.info("### earthquakes - Errores Encontrados");
+			
 			List<String> errors = result.getFieldErrors().stream()
 					.map(err -> "El campo '" + err.getField() + "' " + err.getDefaultMessage())
 					.collect(Collectors.toList());
@@ -123,6 +144,7 @@ public class ServiceController  {
 		}
 
 		try {
+			logger.info("### earthquakes - url: "+ url + "query?format=geojson&minmagnitude="+rango.getMinmagnitude()+"&maxmagnitude="+rango.getMaxmagnitude());
 			Response resok = Tools.getInstance().responseOkHttp(url + "query?format=geojson&minmagnitude="+rango.getMinmagnitude()+"&maxmagnitude="+rango.getMaxmagnitude());
 			String json = resok.body().string();
 			JSONObject sismo = new JSONObject(json);
@@ -135,7 +157,11 @@ public class ServiceController  {
 			response.put("mensaje", "Error al realizar el insert en la base de datos");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		} catch (Exception ex) {
+			response.put("mensaje", "Error al parsear parámetros de Magnitud");
+			response.put("error", ex.getMessage().concat(": ").concat(ex.getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNPROCESSABLE_ENTITY);
+    	}  
 
 		response.put("mensaje", "La Bitácora  ha sido creado con éxito!");
 		response.put("bitacora", ret);
