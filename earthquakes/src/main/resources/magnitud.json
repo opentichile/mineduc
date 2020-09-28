@@ -1,0 +1,60 @@
+{
+    "type": "FeatureCollection",
+    "metadata": {
+        "generated": 1601173588000,
+        "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=6&maxmagnitude=8",
+        "title": "USGS Earthquakes",
+        "status": 200,
+        "api": "1.10.3",
+        "count": 16
+    },
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "mag": 6.1,
+                "place": "south of Africa",
+                "time": 1601140222422,
+                "updated": 1601167446884,
+                "tz": null,
+                "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000c1np",
+                "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000c1np&format=geojson",
+                "felt": 213,
+                "cdi": 2.9,
+                "mmi": 0,
+                "alert": "green",
+                "status": "reviewed",
+                "tsunami": 0,
+                "sig": 634,
+                "net": "us",
+                "code": "6000c1np",
+                "ids": ",us6000c1np,pt20270003,at00qh9zpe,",
+                "sources": ",us,pt,at,",
+                "types": ",dyfi,internal-origin,losspager,origin,phase-data,shakemap,",
+                "nst": null,
+                "dmin": 13.751,
+                "rms": 0.63,
+                "gap": 18,
+                "magType": "mww",
+                "type": "earthquake",
+                "title": "M 6.1 - south of Africa"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    31.7636,
+                    -48.0314,
+                    10
+                ]
+            },
+            "id": "us6000c1np"
+        }],
+    "bbox": [
+        -71.5642,
+        -48.0314,
+        8.24,
+        179.9438,
+        55.9268,
+        344
+    ]
+}
