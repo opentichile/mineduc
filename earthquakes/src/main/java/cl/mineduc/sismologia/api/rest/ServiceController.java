@@ -1,6 +1,7 @@
 package cl.mineduc.sismologia.api.rest;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,31 +61,27 @@ public class ServiceController  {
 	@Autowired
 	private IMetadataService metadataService;
 	
-	@Value("${periodo.date.rango}")
-	private String message_periodo;
-	
-	@Value("${rango.magnitude.rango}")
-	private String message_range;
-	
-    @Value("${url.heartquake.endpoint}")
+	@Value("${url.heartquake.endpoint}")
     private String url;
 	
 	@RequestMapping(value = "/date/earthquakes", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public ResponseEntity<?> earthquakes(@Valid @RequestBody Periodo periodo, BindingResult result) throws IOException {
 
+		List<String> errors = new ArrayList<String>();
 		Map<String, Object> response = new HashMap<>();
 		String ret = "";
 
 		logger.info("### earthquakes Init");
-		if(!Tools.getInstance().isValid(periodo))
+		if(Tools.getInstance().isValid(periodo)!=null)
 		{
-			result.addError(new ObjectError("Periodo de fecha", message_periodo));
+			response = Tools.getInstance().isValid(periodo);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
 		if (result.hasErrors()) {
 
 			logger.info("### earthquakes - Errores Encontrados");
 			
-			List<String> errors = result.getFieldErrors().stream()
+			          errors = result.getFieldErrors().stream()
 					.map(err -> "El campo '" + err.getField() + "' " + err.getDefaultMessage())
 					.collect(Collectors.toList());
 
@@ -121,21 +118,21 @@ public class ServiceController  {
 	
 	@RequestMapping(value = "/magnitude/earthquakes", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public ResponseEntity<?> magnitude(@Valid @RequestBody Rango rango, BindingResult result) throws IOException {
-
+		List<String> errors = new ArrayList<String>();
 		Map<String, Object> response = new HashMap<>();
 		String ret = "";
 
 		logger.info("### earthquakes Init");
-		if(!Tools.getInstance().isValid(rango))
+		if(Tools.getInstance().isValid(rango)!=null)
 		{
-			result.addError(new ObjectError("Rangos de Magnitud", message_range));
+			response = Tools.getInstance().isValid(rango);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
-		
 		if (result.hasErrors()) {
 
 			logger.info("### earthquakes - Errores Encontrados");
 			
-			List<String> errors = result.getFieldErrors().stream()
+					errors = result.getFieldErrors().stream()
 					.map(err -> "El campo '" + err.getField() + "' " + err.getDefaultMessage())
 					.collect(Collectors.toList());
 

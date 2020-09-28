@@ -1,8 +1,10 @@
 package cl.mineduc.sismologia.models.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Range;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,13 +27,12 @@ public class Rango implements Serializable{
 	private static final long serialVersionUID = -7179732598731034411L;
 
 
-	@NotEmpty(message ="La magnitud mínima debe de ser de largo 1 con formato #.#")
-	@Size(min=1, max=3, message="La magnitud mínima debe de ser de largo 2 con formato #.#")
-	public String minmagnitude;
+	@Range(min = (long) 0.0, max = (long) 10.0, message="La magnitud mínima 0 hasta 10")
+	public double minmagnitude;
 	
-	@NotEmpty(message ="La magnitud mínima debe de ser de largo 1 con formato #.#")
-	@Size(min=1, max=3, message="La magnitud mínima debe de ser de largo 2 con formato #.#")
-	public String maxmagnitude;
+
+	@Range(min = (long) 0.0, max = (long) 10.0, message="La magnitud mínima 0 hasta 10")
+	public double maxmagnitude;
 
 	public Rango() {
 		super();
